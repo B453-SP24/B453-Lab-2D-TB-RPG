@@ -17,11 +17,14 @@ public class CombatActionsUIHandler : MonoBehaviour
 
     public void OnBeginTurn(CombatCharacter character)
     {
+        //Ignore rest if the character is not a player
         if (!character.isPlayer)
         {
             return;
         }
 
+
+        //Show the combat actions UI
         visualContainer.SetActive(true);
 
         for (int i = 0; i < combatActionButtons.Length; i++)
@@ -42,11 +45,13 @@ public class CombatActionsUIHandler : MonoBehaviour
         }
     }
 
+    //Hide the combat actions UI
     public void OnEndTurn(CombatCharacter character)
     {
         visualContainer.SetActive(false);
     }
 
+    //Handle the combat action click
     public void OnClickCombatAction(CombatActions combatAction)
     {
         TurnManager.instance.currentCharacter.CastCombatAction(combatAction);

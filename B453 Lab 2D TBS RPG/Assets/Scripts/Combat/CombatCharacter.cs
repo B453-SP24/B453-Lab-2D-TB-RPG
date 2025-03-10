@@ -4,20 +4,25 @@ using UnityEngine;
 
 public class CombatCharacter : MonoBehaviour
 {
-    public bool isPlayer;
-    public List<CombatActions> combatActions;
+    public bool isPlayer;                       //Handles if the character is player controlled or not
+    public List<CombatActions> combatActions;   //List of combat actions the character can perform (Damaging, Healing, etc...)
 
     public int curHp;
     public int maxHp;
 
-    [SerializeField] private CombatCharacter opponent;
-    private Vector3 startPos;
+    [SerializeField] private CombatCharacter opponent;  //Target of the attack
+    private Vector3 startPos;                           //Starting position of the character for the attack animation
 
+    //Sets the starting position of the character
     private void Start()
     {
         startPos = transform.position;
     }
 
+    /// <summary>
+    /// Takes damage and checks if the character is dead
+    /// </summary>
+    /// <param name="damageToTake"> desired amount of damage dealt to the character</param>
     public void TakeDamage(int damageToTake)
     {
 
@@ -32,12 +37,19 @@ public class CombatCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Invokes the onCharacterDie event and then destroy the character
+    /// </summary>
     private void Die()
     {
         CombatEvents.instance.e_onCharacterDie.Invoke(this);
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Heals the character and checks if the heal amount is greater than the max hp
+    /// </summary>
+    /// <param name="healAmount">desired healing amount</param>
     public void Heal(int healAmount)
     {
         curHp += healAmount;
@@ -50,6 +62,10 @@ public class CombatCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Casts the combat action and checks if the action is an attack, a projectile or a heal
+    /// </summary>
+    /// <param name="combatAction">CombatActions SO</param>
     public void CastCombatAction(CombatActions combatAction)
     {
         if (combatAction.Damage > 0)
@@ -72,6 +88,12 @@ public class CombatCharacter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moves the character towards the opponent to attack, 
+    /// and move them back to the starting position once they finish the attack
+    /// </summary>
+    /// <param name="combatAction"> CombatActions SO that stores the amount of damage</param>
+    /// <returns></returns>
     IEnumerator AttackOpponent(CombatActions combatAction)
     {
         while (transform.position != opponent.transform.position)
